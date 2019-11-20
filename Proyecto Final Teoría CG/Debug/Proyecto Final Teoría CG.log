@@ -1,0 +1,4 @@
+﻿  Main.cpp
+c:\users\e_132\onedrive\documentos\proyecto cgrafica\proyecto final teoría cg\proyecto final teoría cg\main.cpp(557): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\users\e_132\onedrive\documentos\proyecto cgrafica\proyecto final teoría cg\proyecto final teoría cg\main.cpp(564): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+  Proyecto Final Teoría CG.vcxproj -> C:\Users\e_132\OneDrive\Documentos\PROYECTO CGRAFICA\Proyecto Final Teoría CG\Debug\Proyecto Final Teoría CG.exe
