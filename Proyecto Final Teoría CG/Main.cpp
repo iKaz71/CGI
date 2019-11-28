@@ -13,6 +13,7 @@
 #include "camera.h"
 #include "Model.h"
 
+
 // Other Libs
 #include "SOIL2/SOIL2.h"
 
@@ -45,7 +46,7 @@ glm::vec3 lightPosition(0.0f, 2.0f, 2.0f);
 glm::vec3 lightDirection(-1.0f, -1.0f, -1.0f);
 
 void myData(void);
-void display(Shader, Model);
+void display(Shader, Model, Model, Model, Model, Model, Model, Model, Model, Model, Model, Model, Model, Model, Model, Model, Model, Model, Model);
 void getResolution(void);
 void animate(void);
 void LoadTextures(void);
@@ -57,13 +58,14 @@ movY = 0.0f,
 movZ = -5.0f,
 rotX = 0.0f;
 
+bool puerta = false;
+float rotP = 0.0f;
+
 //Texture
 unsigned int	t_smile;
 
 //Keyframes
-float	posX = 0.0f,
-posY = 0.0f,
-posZ = 0.0f;
+float posY = 3.5f, posX, posZ;
 
 float	incX = 0.0f,
 incY = 0.0f,
@@ -72,8 +74,8 @@ rotInc = 0.0f;
 
 float movLuzX = 0.0f;
 
-#define MAX_FRAMES 9
-int i_max_steps = 90;
+#define MAX_FRAMES 5
+int i_max_steps = 15;
 int i_curr_steps = 0;
 typedef struct _frame
 {
@@ -84,54 +86,34 @@ typedef struct _frame
 }FRAME;
 
 FRAME KeyFrame[MAX_FRAMES];
-int FrameIndex = 9;			//introducir datos
+int FrameIndex = 5;			//introducir datos
 bool play = false;
-int playIndex = 9;
+int playIndex = 5;
 
 void saveFrame(void)
 {
 
 	KeyFrame[0].posX = 0.0f;
-	KeyFrame[0].posY = 2.0f;
+	KeyFrame[0].posY = 3.5f;
 	KeyFrame[0].posZ = 0.0f;
 
-	KeyFrame[1].posX = 2.0f;
-	KeyFrame[1].posY = 2.0f;
+	KeyFrame[1].posX = 0.0f;
+	KeyFrame[1].posY = 3.0f;
 	KeyFrame[1].posZ = 0.0f;
 
-	KeyFrame[2].posX = 4.0f;
+	KeyFrame[2].posX = 0.0f;
 	KeyFrame[2].posY = 2.0f;
 	KeyFrame[2].posZ = 0.0f;
 
-	KeyFrame[3].posX = 4.0f;
-	KeyFrame[3].posY = 2.0f;
-	KeyFrame[3].posZ = 2.0f;
+	KeyFrame[3].posX = 0.0f;
+	KeyFrame[3].posY = 1.0f;
+	KeyFrame[3].posZ = 0.0f;
 
-	KeyFrame[4].posX = 4.0f;
-	KeyFrame[4].posY = 2.0f;
-	KeyFrame[4].posZ = 4.0f;
+	KeyFrame[4].posX = 0.0f;
+	KeyFrame[4].posY = 0.5f;
+	KeyFrame[4].posZ = 0.0f;
 
-	KeyFrame[5].posX = 2.0f;
-	KeyFrame[5].posY = 2.0f;
-	KeyFrame[5].posZ = 4.0f;
-
-	KeyFrame[6].posX = 0.0f;
-	KeyFrame[6].posY = 2.0f;
-	KeyFrame[6].posZ = 4.0f;
-
-	KeyFrame[7].posX = -2.0f;
-	KeyFrame[7].posY = 2.0f;
-	KeyFrame[7].posZ = 4.0f;
-
-	KeyFrame[8].posX = -4.0f;
-	KeyFrame[8].posY = 0.0f;
-	KeyFrame[8].posZ = 4.0f;
-
-	KeyFrame[9].posX = -4.0f;
-	KeyFrame[9].posY = 0.0f;
-	KeyFrame[9].posZ = 2.0f;
-
-	FrameIndex = 9;
+	FrameIndex = 5;
 }
 
 void resetElements(void)
@@ -209,39 +191,10 @@ void myData()
 	float vertices[] = {
 		// positions          // normals           // texture coords
 		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f,
-
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f,
 
 	};
 	unsigned int indices[] = {
 		0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
 	};
 
 	glGenVertexArrays(1, &VAO);
@@ -302,26 +255,29 @@ void animate(void)
 
 }
 
-void display(Shader shader, Model piso)
+void display(Shader shader, Model casa, Model piso, Model mesa, Model computadora, Model computadoraInv, Model muro1,
+	Model muro2, Model muro3, Model muro4, Model calavera, Model techo, Model slender, Model space, Model pasto, Model door,
+	Model mano, Model ofrenda, Model bat)
 {
 	shader.use();
 
 	shader.setVec3("viewPos", camera.Position);
 	shader.setVec3("dirLight.direction", lightDirection);
-	shader.setVec3("dirLight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-	shader.setVec3("dirLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-	shader.setVec3("dirLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-
+	
+	shader.setVec3("dirLight.ambient", glm::vec3(0.6f, 0.6f, 0.6f));
+	shader.setVec3("dirLight.diffuse", glm::vec3(0.2f, 0.2f, 0.2f));
+	shader.setVec3("dirLight.specular", glm::vec3(0.0f, 0.0f, 0.0f));
+	
 	//shader.setVec3("pointLight.position", lightPosition);
-	shader.setVec3("pointLight.position", glm::vec3(0.0f, 2.0f, 3.0f));
-
-	shader.setVec3("pointLight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
-	shader.setVec3("pointLight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-	shader.setVec3("pointLight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-	shader.setFloat("pointLight.constant", 1.0f);
+	shader.setVec3("pointLight.position", glm::vec3(0.0f, 8.0f, 0.0f));
+	
+	shader.setVec3("pointLight.ambient", glm::vec3(0.8f, 0.8f, 0.8f));
+	shader.setVec3("pointLight.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
+	shader.setVec3("pointLight.specular", glm::vec3(0.1f, 0.1f, 0.1f));
+	shader.setFloat("pointLight.constant", 0.0f);
 	shader.setFloat("pointLight.linear", 0.09f);
 	shader.setFloat("pointLight.quadratic", 0.032f);
-
+	
 
 	shader.setFloat("material_shininess", 32.0f);
 	// create transformations and Projection
@@ -341,9 +297,261 @@ void display(Shader shader, Model piso)
 	shader.setMat4("projection", projection);
 
 	model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 0.0f, -0.85f));
-	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::scale(model, glm::vec3(0.12f, 0.06f, 0.12f));
 	shader.setMat4("model", model);
 	piso.Draw(shader);
+
+	//Mesa1
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 0.0f, -4.0f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.055f));
+	shader.setMat4("model", model);
+	mesa.Draw(shader);
+	//Computadora 1
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 0.0f, -6.3f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadoraInv.Draw(shader);
+	//Computadora 2
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 0.0f, -4.4f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadoraInv.Draw(shader);
+	//Computadora 3
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 0.0f, -2.5f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadoraInv.Draw(shader);
+
+	//Mesa2
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 0.0f, 4.4f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.063f));
+	shader.setMat4("model", model);
+	mesa.Draw(shader);
+	//Computadora 4
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 0.0f, 1.3f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+	//Computadora 5
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 0.0f, 2.7f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+	//Computadora 6
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 0.0f, 4.3f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+	//Computadora 7
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, 0.0f, 5.9f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+
+
+
+	//Mesa3
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.0f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.055f));
+	shader.setMat4("model", model);
+	mesa.Draw(shader);
+	//Computadora 8
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -6.3f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadoraInv.Draw(shader);
+	//Computadora 9
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -4.4f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadoraInv.Draw(shader);
+	//Computadora 10
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.5f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadoraInv.Draw(shader);
+
+
+
+	//Mesa4
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 4.4f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.063f));
+	shader.setMat4("model", model);
+	mesa.Draw(shader);
+	//Computadora 11
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 1.3f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+	//Computadora 12
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 2.7f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+	//Computadora 13
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 4.3f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+	//Computadora 14
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.9f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+
+
+
+	//Mesa5
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-4.0f, 0.0f, -4.0f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.055f));
+	shader.setMat4("model", model);
+	mesa.Draw(shader);
+	//Computadora 15
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-4.0f, 0.0f, -6.3f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadoraInv.Draw(shader);
+	//Computadora 16
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-4.0f, 0.0f, -4.4f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadoraInv.Draw(shader);
+	//Computadora 17
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-4.0f, 0.0f, -2.5f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadoraInv.Draw(shader);
+
+
+
+
+	//Mesa6
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-4.0f, 0.0f, 4.4f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.063f));
+	shader.setMat4("model", model);
+	mesa.Draw(shader);
+	//Computadora 18
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-4.0f, 0.0f, 1.3f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+	//Computadora 19
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-4.0f, 0.0f, 2.7f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+	//Computadora 20
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-4.0f, 0.0f, 4.3f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+	//Computadora 21
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-4.0f, 0.0f, 5.9f));
+	model = glm::scale(model, glm::vec3(0.035f, 0.035f, 0.035f));
+	shader.setMat4("model", model);
+	computadora.Draw(shader);
+
+	//Muro1
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(1.3f, 0.0f, -7.0f));
+	model = glm::scale(model, glm::vec3(0.085f, 0.045f, 0.03f));
+	shader.setMat4("model", model);
+	muro1.Draw(shader);
+
+	//Muro2
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.1f, 0.0f, 8.0f));
+	model = glm::scale(model, glm::vec3(0.097f, 0.045f, 0.03f));
+	shader.setMat4("model", model);
+	muro2.Draw(shader);
+
+	//Muro3
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-8.8f, 0.0f, 0.5f));
+	model = glm::scale(model, glm::vec3(0.083f, 0.045f, 0.082f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	muro3.Draw(shader);
+
+	//Muro4
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(8.8f, 0.0f, 0.5f));
+	model = glm::scale(model, glm::vec3(0.083f, 0.045f, 0.082f));
+	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	muro4.Draw(shader);
+
+	//Slenderman
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(18.0f, 8.0f, 16.0f));
+	model = glm::scale(model, glm::vec3(0.09f, 0.09f, 0.09f));
+	model = glm::rotate(model, glm::radians(-130.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	shader.setMat4("model", model);
+	slender.Draw(shader);
+
+
+	//Kunai
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, posY, 0.0f));
+	model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+	shader.setMat4("model", model);
+	calavera.Draw(shader);
+
+	//Techo
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, -0.2f, -0.85f));
+	model = glm::scale(model, glm::vec3(0.12f, 0.06f, 0.12f));
+	shader.setMat4("model", model);
+	techo.Draw(shader);
+
+	//CASA
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(6.0f, 0.0f, -24.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	shader.setMat4("model", model);
+	casa.Draw(shader);
+
+	//Puerta
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(6.1f, 0.0f, -24.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	model = glm::rotate(model, glm::radians(rotP), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	door.Draw(shader);
+
+	//Noche
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -2.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	shader.setMat4("model", model);
+	space.Draw(shader);
+
+	//Pasto
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -0.1f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	shader.setMat4("model", model);
+	pasto.Draw(shader);
+
+	//Mano
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, -1.78f, 4.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	mano.Draw(shader);
+
+	//Mano1
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(-5.0f, -1.78f, -4.4f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	mano.Draw(shader);
+
+	//Ofrenda
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(6.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	ofrenda.Draw(shader);
+
+	//bAT
+	model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+	//model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.setMat4("model", model);
+	bat.Draw(shader);
+
+
 	
 }
 
@@ -351,7 +559,16 @@ int main()
 {
 	// glfw: initialize and configure
 	// ------------------------------
+	
 	glfwInit();
+
+
+
+
+
+
+
+
 
 
 	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -395,7 +612,24 @@ int main()
 
 	Shader modelShader("Shaders/shader_Lights.vs", "Shaders/shader_Lights.fs");
 	// Load models
-	Model pisoModel = ((char *)"Modelos/Casa/micasanavi.obj");
+	Model pisoModel = ((char *)"Modelos/Suelo/suelo.obj");
+	Model mesa = ((char *)"Modelos/Mesa/mesa.obj");
+	Model computadora = ((char *)"Modelos/PC/computadora.obj");
+	Model computadoraInv = ((char *)"Modelos/PC/computadoraInv.obj");
+	Model muro1 = ((char *)"Modelos/Ventana/muro1.obj");
+	Model muro2 = ((char *)"Modelos/Ventana/muro2.obj");
+	Model muro3 = ((char *)"Modelos/Ventana/muro3.obj");
+	Model muro4 = ((char *)"Modelos/Ventana/muro4.obj");
+	Model cala = ((char *)"Modelos/Kunai/kunai.obj");
+	Model techo = ((char *)"Modelos/Tejado/techo.obj");
+	Model casa = ((char *)"Modelos/Casa/micasanavi.obj");
+	Model slender = ((char *)"Modelos/Slenderman/slender.obj");
+	Model space = ((char *)"Modelos/Noche/noche.obj");
+	Model pasto = ((char *)"Modelos/Grass/grass.obj");
+	Model puerta = ((char *)"Modelos/Puerta/puerta.obj");
+	Model mano = ((char *)"Modelos/Mano/RiggedHand.obj");
+	Model ofrenda = ((char *)"Modelos/Ofrenda/ofrenda.obj");
+	Model bat = ((char *)"Modelos/Bat/BatBody/bat.obj");
 	
 	//Inicialización de KeyFrames
 	for (int i = 0; i < MAX_FRAMES; i++)
@@ -405,7 +639,7 @@ int main()
 		KeyFrame[i].posZ = 0;
 	}
 
-
+	saveFrame();
 
 	glm::mat4 projection = glm::mat4(1.0f);	//This matrix is for Projection
 	projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -416,7 +650,7 @@ int main()
 		// per-frame time logic
 		// --------------------
 		double currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
+		deltaTime = currentFrame - lastFrame+ 0.01;
 		lastFrame = currentFrame;
 		// input
 		// -----
@@ -429,7 +663,8 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//display(modelShader, ourModel, llantasModel);
-		display(modelShader, pisoModel);
+		display(modelShader, casa, pisoModel, mesa, computadora, computadoraInv, muro1, muro2, muro3, muro4, cala, techo, slender, space, pasto, puerta, mano, ofrenda, bat);
+
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
@@ -441,27 +676,6 @@ int main()
 	// ------------------------------------------------------------------
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
-
-
-
-
-
-
-	/*
-	// start the sound engine with default parameters
-	ISoundEngine* engine = createIrrKlangDevice();
-
-
-	engine->play2D("../../media/getout.ogg", true);
-
-
-	engine->drop(); // delete engine
-
-	*/
-
-
-
-
 
 
 	glfwTerminate();
@@ -496,6 +710,25 @@ void my_input(GLFWwindow *window, int key, int scancode, int action, int mode)
 		movLuzX++;
 	if (glfwGetKey(window, GLFW_KEY_END) == GLFW_PRESS)
 		movLuzX--;
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{	
+		if (puerta == false)
+		{
+			for (int i = 0; i < 20; i++)
+			{
+				rotP -= 1.0f;
+			}
+			puerta = true;
+		}
+		else
+		{
+			for (int i = 0; i < 20; i++)
+			{
+				rotP += 1.0f;
+			}
+			puerta = false;
+		}
+	}
 
 
 	//To play KeyFrame animation 
